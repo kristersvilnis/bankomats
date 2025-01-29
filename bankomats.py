@@ -90,7 +90,6 @@ def ceks_ne_click(event=None):
 def darijuma_ekrans_click(event=None):
     canvas.destroy()
     darijuma_ekrans()
-    root.after(2500, darijums_pabeigts)
 
 def darijuma_ekrans():
     global canvas 
@@ -203,7 +202,7 @@ def iznemsanas_ekrans():
                                                outline="#786689", fill = "#786689",
                                                width = 10)
     cita_operacija2_teksts = canvas.create_text(800, vid_y+300, \
-                                                 text="Bilance", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
+                                                 text="Cita operācija", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                  anchor="w")
     canvas.tag_bind(cita_operacija2, "<Button-1>", gaidisanas_ekrans_click)
     
