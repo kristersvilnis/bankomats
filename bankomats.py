@@ -26,8 +26,10 @@ def sakuma_ekrans(event=None):
 
     canvas.bind_all('<Key>', ievietot_karti)
 
-    karte_sakums = canvas.create_text(vid_x, 150, text="Lai sāktu darbību, \n ievietojiet karti", fill='#FFFFFF', font=('Catamaran', 50, "bold"))
-    karte_sakums_eng = canvas.create_text(vid_x, 810, text="To proceed, please \n insert your card", fill='#FFFFFF', font=('Catamaran', 50, "bold"))
+    karte_sakums = canvas.create_text(vid_x, 100, text="Lai sāktu darbību,", fill='#FFFFFF', font=('Catamaran', 50, "bold"), anchor="center")
+    karte_sakums2 = canvas.create_text(vid_x, 180, text="ievietojiet karti", fill='#FFFFFF', font=('Catamaran', 50, "bold"), anchor="center")
+    karte_sakums_eng = canvas.create_text(vid_x, 810, text="To proceed, please", fill='#FFFFFF', font=('Catamaran', 50, "bold"), anchor="center")
+    karte_sakums2_eng = canvas.create_text(vid_x, 890, text="insert your card", fill='#FFFFFF', font=('Catamaran', 50, "bold"), anchor="center")
 
 def meklet_pin():
     try:
@@ -37,7 +39,7 @@ def meklet_pin():
         messagebox.showerror("Error", "PIN file not found!")
         return None
 
-def apstiprinat_pin():
+def apstiprinat_pin(event=None):
     global canvas
     uzglabatais_pin = meklet_pin()
     ievaditais_pin = pin_var.get()
@@ -51,6 +53,13 @@ def apstiprinat_pin():
     else:
         canvas.destroy()
         nepareizais_pin_ekrans()
+
+def enter_poga_click(event=None):
+    canvas.destroy()
+    iznemsanas_ekrans()
+
+def dzest_pin(event=None):
+    pin_var.set("")
 
 def naudas_iznemsana_click(event):
     canvas.destroy()
@@ -91,6 +100,95 @@ def darijuma_ekrans_click(event=None):
     canvas.destroy()
     darijuma_ekrans()
 
+def ievietot_karti(notikums):
+    if notikums.keysym == 'space':
+        if canvas:
+            canvas.destroy()
+        pin_koda_ekrans()
+
+def pin_koda_ekrans():
+    global canvas, pin_entry
+    canvas = Canvas(root, width=platums, height=garums, bg="#574964")
+    canvas.pack()
+
+    pin_var.set("")
+
+    pin_kods = canvas.create_text(vid_x, 140, \
+                                      text="Ievadiet PIN kodu", fill="#FFFFFF", font=('Catamaran', 50, "bold"))
+    pin_kods_eng = canvas.create_text(vid_x, 210, \
+                                      text="Please enter your PIN", fill="#FFFFFF", font=('Catamaran', 30, "bold"))
+    pin_kods_ekrans = canvas.create_rectangle(vid_x-250, 270, vid_x+250, 350,
+                                              outline = "#9F8383", fill = "#9F8383",
+                                              width = 10)
+    pin_kods_keyboard = canvas.create_rectangle(vid_x-250, 450, vid_x+250, 830,
+                                                outline="#9F8383", fill = "#9F8383",
+                                                width = 10)
+    pin_kods_pogas_bg2 = canvas.create_rectangle(vid_x-220, 480, vid_x+220, 800,
+                                                 outline="#C8AAAA", fill = "#C8AAAA",
+                                                 width = 10)
+    pin_entry = Entry(canvas, textvariable = pin_var, font=('catamaran',30,'bold'), show = '*')
+    canvas.create_window(vid_y+160, 310, window=pin_entry)
+    # ENTER poga
+    pin_enter_poga = canvas.create_rectangle(vid_x-210, 490, vid_x+210, 550,
+                                                         outline="#EEEEEE", fill = "#EEEEEE",
+                                                         width = 10)
+    pin_enter_teksts = canvas.create_text(vid_x-190, 520, \
+                                                         text="Enter", fill="#000000", font=('Catamaran', 25, "bold"),
+                                                         anchor="w")
+    canvas.tag_bind(pin_enter_poga, "<Button-1>", apstiprinat_pin)
+    canvas.tag_bind(pin_enter_teksts, "<Button-1>", apstiprinat_pin)
+
+    # CLEAR poga
+    pin_clear_poga = canvas.create_rectangle(vid_x-210, 570, vid_x+210, 630,
+                                                         outline="#EEEEEE", fill = "#EEEEEE",
+                                                         width = 10)
+    pin_clear_teksts = canvas.create_text(vid_x-190, 600, \
+                                                         text="Clear", fill="#000000", font=('Catamaran', 25, "bold"),
+                                                         anchor="w")
+    canvas.tag_bind(pin_clear_poga, "<Button-1>", dzest_pin)
+    canvas.tag_bind(pin_clear_teksts, "<Button-1>", dzest_pin)
+    # CANCEL poga
+    pin_cancel_poga = canvas.create_rectangle(vid_x-210, 650, vid_x+210, 710,
+                                                         outline="#EEEEEE", fill = "#EEEEEE",
+                                                         width = 10)
+    pin_cancel_teksts = canvas.create_text(vid_x-190, 680, \
+                                                         text="Cancel", fill="#000000", font=('Catamaran', 25, "bold"),
+                                                         anchor="w")
+    canvas.tag_bind(pin_cancel_poga, "<Button-1>", sakuma_ekrans)
+    canvas.tag_bind(pin_cancel_teksts, "<Button-1>", sakuma_ekrans)
+    # tukšs lauks
+    tukss_lauks = canvas.create_rectangle(vid_x-210, 730, vid_x+210, 790,
+                                                         outline="#EEEEEE", fill = "#EEEEEE",
+                                                         width = 10)
+    
+
+def nepareizais_pin_ekrans():
+    global canvas
+    canvas = Canvas(root, width=platums, height=garums, bg="#574964")
+    canvas.pack()
+
+    noradit_darijumu = canvas.create_text(vid_x, 140, \
+                                      text="Nepareizais PIN. Mēģināt vēlreiz?", fill="#FFFFFF", font=('Catamaran', 50, "bold"))
+    noradit_darijumu_eng = canvas.create_text(vid_x, 210, \
+                                      text="Incorrect PIN. Try again?", fill="#FFFFFF", font=('Catamaran', 30, "bold"))
+    izvele_ja = canvas.create_rectangle(780, vid_y-35, 1280, vid_y+35,
+                                                         outline="#786689", fill = "#786689",
+                                                         width = 10)
+    izvele_ja_teksts = canvas.create_text(800, vid_y, \
+                                                         text="Jā", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
+                                                         anchor="w")
+    canvas.tag_bind(izvele_ja, "<Button-1>", nepareizs_pin_ja)
+    canvas.tag_bind(izvele_ja, "<Button-1>", izvele_ja_teksts)
+
+    izvele_ne = canvas.create_rectangle(780, vid_y+100, 1280, vid_y+170,
+                                                         outline="#786689", fill = "#786689",
+                                                         width = 10)
+    izvele_ne_teksts = canvas.create_text(800, vid_y+135, \
+                                                         text="Nē", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
+                                                         anchor="w")
+    canvas.tag_bind(izvele_ne, "<Button-1>", nepareizs_pin_ne)
+    canvas.tag_bind(izvele_ja, "<Button-1>", izvele_ne_teksts)
+
 def darijuma_ekrans():
     global canvas 
     canvas = Canvas(root, width=platums, height=garums, bg="#574964")
@@ -107,6 +205,7 @@ def darijuma_ekrans():
                                                  text="Naudas izņemšana", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                  anchor="e")
     canvas.tag_bind(naudas_iznemsana, "<Button-1>", naudas_iznemsana_click)
+    canvas.tag_bind(naudas_iznemsana_teksts, "<Button-1>", naudas_iznemsana_click)
 
     naudas_iemaksa = canvas.create_rectangle(0, vid_y+100, 500, vid_y+170,
                                              outline="#786689", fill = "#786689",
@@ -273,64 +372,6 @@ def darijums_pabeigts():
                                                          text="Nē", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                          anchor="w")
     canvas.tag_bind(izvele_ne3, "<Button-1>", sakuma_ekrans)
-
-def nepareizais_pin_ekrans():
-    global canvas
-    canvas = Canvas(root, width=platums, height=garums, bg="#574964")
-    canvas.pack()
-
-    noradit_darijumu = canvas.create_text(vid_x, 140, \
-                                      text="Nepareizais PIN. Mēģināt vēlreiz?", fill="#FFFFFF", font=('Catamaran', 50, "bold"))
-    noradit_darijumu_eng = canvas.create_text(vid_x, 210, \
-                                      text="Incorrect PIN. Try again?", fill="#FFFFFF", font=('Catamaran', 30, "bold"))
-    izvele_ja = canvas.create_rectangle(780, vid_y-35, 1280, vid_y+35,
-                                                         outline="#786689", fill = "#786689",
-                                                         width = 10)
-    izvele_ja_teksts = canvas.create_text(800, vid_y, \
-                                                         text="Jā", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
-                                                         anchor="w")
-    canvas.tag_bind(izvele_ja, "<Button-1>", nepareizs_pin_ja)
-
-    izvele_ne = canvas.create_rectangle(780, vid_y+100, 1280, vid_y+170,
-                                                         outline="#786689", fill = "#786689",
-                                                         width = 10)
-    izvele_ne_teksts = canvas.create_text(800, vid_y+135, \
-                                                         text="Nē", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
-                                                         anchor="w")
-    canvas.tag_bind(izvele_ne, "<Button-1>", nepareizs_pin_ne)
-
-def pin_koda_ekrans():
-    global canvas
-    canvas = Canvas(root, width=platums, height=garums, bg="#574964")
-    canvas.pack()
-        
-    pin_kods = canvas.create_text(vid_x, 140, \
-                                      text="Ievadiet PIN kodu", fill="#FFFFFF", font=('Catamaran', 50, "bold"))
-    pin_kods_eng = canvas.create_text(vid_x, 210, \
-                                      text="Please enter your PIN", fill="#FFFFFF", font=('Catamaran', 30, "bold"))
-    pin_kods_ekrans = canvas.create_rectangle(vid_x-250, 270, vid_x+250, 350,
-                                              outline = "#9F8383", fill = "#9F8383",
-                                              width = 10)
-    pin_kods_keyboard = canvas.create_rectangle(vid_x-400, 450, vid_x+400, 850,
-                                                outline="#9F8383", fill = "#9F8383",
-                                                width = 10)
-    pin_kods_pogas_bg = canvas.create_rectangle(vid_x-370, 480, vid_x-20, 820,
-                                                outline="#C8AAAA", fill = "#C8AAAA",
-                                                width = 10)
-    pin_kods_pogas_bg2 = canvas.create_rectangle(vid_x+20, 480, vid_x+370, 820,
-                                                 outline="#C8AAAA", fill = "#C8AAAA",
-                                                 width = 10)
-    pin_entry = Entry(canvas, textvariable = pin_var, font=('catamaran',30,'bold'), show = '*')
-    canvas.create_window(vid_y+160, 310, window=pin_entry)
-    
-    pin_enter_poga = Button(canvas, text ="ENTER", command = apstiprinat_pin, font=('catamaran',25,'bold'))
-    canvas.create_window(vid_x+180, 550, window=pin_enter_poga)
-
-def ievietot_karti(notikums):
-    if notikums.keysym == 'space':
-        if canvas:
-            canvas.destroy()
-        pin_koda_ekrans()
 
 sakuma_ekrans() #sākt ar kāršu ievietošanas ekrānu
 
