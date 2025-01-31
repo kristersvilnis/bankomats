@@ -69,10 +69,19 @@ def naudas_iemaksa_click(event):
     print("Naudas iemaksa!")
 
 def bilance_click(event):
-    print("Bilance!")
+    canvas.destroy()
+    gaidisanas_ekrans()
+    root.after(1500, bilances_ekrans)
+
+def bilance_summa():
+    bilance_fails = open('bilance.txt', 'r')
+    bilance_eiro = bilance_fails.read()
+    bilance_summa_teksts = canvas.create_text(vid_x, vid_y-150, \
+                                      text=f"{bilance_eiro} EUR", fill="#FFFFFF", font=('Catamaran', 60, "bold"))
 
 def cita_operacija_click(event):
-    print("Cita operācija!")
+    canvas.destroy()
+    darijuma_ekrans()
 
 def gaidisanas_ekrans_click(event=None):
     canvas.destroy()
@@ -135,8 +144,12 @@ def pin_koda_ekrans():
     pin_enter_teksts = canvas.create_text(vid_x-190, 520, \
                                                          text="Enter", fill="#000000", font=('Catamaran', 25, "bold"),
                                                          anchor="w")
+    pin_enter_poga_ikona = canvas.create_line(vid_x-190, 540, vid_x-100, 540, fill="#2EC301", width=5)
+    pin_enter_poga_aplis = canvas.create_oval(vid_x+150, 500, vid_x+190, 540, outline="black", width=5)
     canvas.tag_bind(pin_enter_poga, "<Button-1>", apstiprinat_pin)
     canvas.tag_bind(pin_enter_teksts, "<Button-1>", apstiprinat_pin)
+    canvas.tag_bind(pin_enter_poga_ikona, "<Button-1>", apstiprinat_pin)
+    canvas.tag_bind(pin_enter_poga_aplis, "<Button-1>", apstiprinat_pin)
 
     # CLEAR poga
     pin_clear_poga = canvas.create_rectangle(vid_x-210, 570, vid_x+210, 630,
@@ -145,8 +158,12 @@ def pin_koda_ekrans():
     pin_clear_teksts = canvas.create_text(vid_x-190, 600, \
                                                          text="Clear", fill="#000000", font=('Catamaran', 25, "bold"),
                                                          anchor="w")
+    pin_clear_poga_ikona = canvas.create_line(vid_x-190, 620, vid_x-100, 620, fill="#E7DF00", width=5)
+    pin_clear_poga_trissturis = canvas.create_polygon(vid_x+150, 600, vid_x+180, 580, vid_x+150, 600, vid_x+180, 620, outline="black", width=5)
     canvas.tag_bind(pin_clear_poga, "<Button-1>", dzest_pin)
     canvas.tag_bind(pin_clear_teksts, "<Button-1>", dzest_pin)
+    canvas.tag_bind(pin_clear_poga_ikona, "<Button-1>", dzest_pin)
+    canvas.tag_bind(pin_clear_poga_trissturis, "<Button-1>", dzest_pin)
     # CANCEL poga
     pin_cancel_poga = canvas.create_rectangle(vid_x-210, 650, vid_x+210, 710,
                                                          outline="#EEEEEE", fill = "#EEEEEE",
@@ -154,8 +171,14 @@ def pin_koda_ekrans():
     pin_cancel_teksts = canvas.create_text(vid_x-190, 680, \
                                                          text="Cancel", fill="#000000", font=('Catamaran', 25, "bold"),
                                                          anchor="w")
+    pin_clear_poga_ikona = canvas.create_line(vid_x-190, 700, vid_x-100, 700, fill="#E70000", width=5)
+    pin_clear_poga_linija1 = canvas.create_line(vid_x+148, 660, vid_x+192, 700, fill="black", width=5)
+    pin_clear_poga_linija2 = canvas.create_line(vid_x+192, 660, vid_x+148, 700, fill="black", width=5)
     canvas.tag_bind(pin_cancel_poga, "<Button-1>", sakuma_ekrans)
     canvas.tag_bind(pin_cancel_teksts, "<Button-1>", sakuma_ekrans)
+    canvas.tag_bind(pin_clear_poga_ikona, "<Button-1>", sakuma_ekrans)
+    canvas.tag_bind(pin_clear_poga_linija1, "<Button-1>", sakuma_ekrans)
+    canvas.tag_bind(pin_clear_poga_linija2, "<Button-1>", sakuma_ekrans)
     # tukšs lauks
     tukss_lauks = canvas.create_rectangle(vid_x-210, 730, vid_x+210, 790,
                                                          outline="#EEEEEE", fill = "#EEEEEE",
@@ -222,14 +245,16 @@ def darijuma_ekrans():
                                         text="Bilance", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                         anchor="w")
     canvas.tag_bind(bilance, "<Button-1>", bilance_click)
+    canvas.tag_bind(bilance_teksts, "<Button-1>", bilance_click)
 
     cita_operacija = canvas.create_rectangle(780, vid_y+100, 1280, vid_y+170,
                                              outline="#786689", fill = "#786689",
                                              width = 10)
     cita_operacija_teksts = canvas.create_text(800, vid_y+135, \
-                                               text="Cita operācija", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
+                                               text="Iziet", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                anchor="w")
-    canvas.tag_bind(cita_operacija, "<Button-1>", cita_operacija_click)
+    canvas.tag_bind(cita_operacija, "<Button-1>", sakuma_ekrans)
+    canvas.tag_bind(cita_operacija_teksts, "<Button-1>", sakuma_ekrans)
 
 def iznemsanas_ekrans():
     global canvas 
@@ -372,6 +397,36 @@ def darijums_pabeigts():
                                                          text="Nē", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                          anchor="w")
     canvas.tag_bind(izvele_ne3, "<Button-1>", sakuma_ekrans)
+
+def bilances_ekrans():
+    global canvas
+    if canvas:
+        canvas.destroy()
+    canvas = Canvas(root, width=platums, height=garums, bg="#574964")
+    canvas.pack()
+
+    darijums_pabeigts = canvas.create_text(vid_x, 140, \
+                                      text=f"Jūsu konta atlikums:", fill="#FFFFFF", font=('Catamaran', 50, "bold"))
+    darijums_pabeigts_eng = canvas.create_text(vid_x, 210, \
+                                      text="Your account balance:", fill="#FFFFFF", font=('Catamaran', 30, "bold"))
+    bilance_summa()
+    darijums_cita_operacija = canvas.create_rectangle(780, vid_y+65, 1280, vid_y+135,
+                                             outline="#786689", fill = "#786689",
+                                             width = 10)
+    darijums_cita_operacija_teksts = canvas.create_text(800, vid_y+100, \
+                                               text="Cita operācija", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
+                                               anchor="w")
+    canvas.tag_bind(darijums_cita_operacija, "<Button-1>", cita_operacija_click)
+    canvas.tag_bind(darijums_cita_operacija_teksts, "<Button-1>", cita_operacija_click)
+
+    iziet_operacija = canvas.create_rectangle(780, vid_y+200, 1280, vid_y+270,
+                                             outline="#786689", fill = "#786689",
+                                             width = 10)
+    iziet_operacija_teksts = canvas.create_text(800, vid_y+235, \
+                                               text="Iziet", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
+                                               anchor="w")
+    canvas.tag_bind(iziet_operacija, "<Button-1>", sakuma_ekrans)
+    canvas.tag_bind(iziet_operacija_teksts, "<Button-1>", sakuma_ekrans)
 
 sakuma_ekrans() #sākt ar kāršu ievietošanas ekrānu
 
