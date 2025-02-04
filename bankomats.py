@@ -11,6 +11,7 @@ root.title("Bankomāts")
 Catamaran = font.Font(family="Catamaran-Bold", size=80, weight="bold")
 
 pin_var=StringVar()
+sum_var=StringVar()
 
 vid_x = platums / 2
 vid_y = garums / 2
@@ -54,6 +55,10 @@ def apstiprinat_pin(event=None):
         canvas.destroy()
         nepareizais_pin_ekrans()
 
+def apstiprinat_summu(event=None):
+    global canvas
+    ievadita_summa = sum_var.get()
+
 def enter_poga_click(event=None):
     canvas.destroy()
     iznemsanas_ekrans()
@@ -61,12 +66,17 @@ def enter_poga_click(event=None):
 def dzest_pin(event=None):
     pin_var.set("")
 
+def dzest_summu(event=None):
+    sum_var.set("")
+
 def naudas_iznemsana_click(event):
     canvas.destroy()
     iznemsanas_ekrans()
 
-def naudas_iemaksa_click(event):
-    print("Naudas iemaksa!")
+def naudas_iemaksa_click(notikums):
+    canvas.destroy()
+    iemaksas_ekrans()
+    root.after(3000, gaidisanas_ekrans_click)
 
 def bilance_click(event):
     canvas.destroy()
@@ -78,6 +88,10 @@ def bilance_summa():
     bilance_eiro = bilance_fails.read()
     bilance_summa_teksts = canvas.create_text(vid_x, vid_y-150, \
                                       text=f"{bilance_eiro} EUR", fill="#FFFFFF", font=('Catamaran', 60, "bold"))
+
+def cita_summa_click(event=None):
+    canvas.destroy()
+    cita_summa_ekrans()
 
 def cita_operacija_click(event):
     canvas.destroy()
@@ -237,6 +251,7 @@ def darijuma_ekrans():
                                                text="Naudas iemaksa", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                anchor="e")
     canvas.tag_bind(naudas_iemaksa, "<Button-1>", naudas_iemaksa_click)
+    canvas.tag_bind(naudas_iemaksa_teksts, "<Button-1>", naudas_iemaksa_click)
 
     bilance = canvas.create_rectangle(780, vid_y-35, 1280, vid_y+35,
                                       outline="#786689", fill = "#786689",
@@ -273,6 +288,7 @@ def iznemsanas_ekrans():
                                                  text="5 EUR", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                  anchor="e")
     canvas.tag_bind(pieci_eiro, "<Button-1>", gaidisanas_ekrans_click)
+    canvas.tag_bind(pieci_eiro_teksts, "<Button-1>", gaidisanas_ekrans_click)
 
     desmit_eiro = canvas.create_rectangle(0, vid_y-5, 500, vid_y+65,
                                                outline="#786689", fill = "#786689",
@@ -281,6 +297,7 @@ def iznemsanas_ekrans():
                                                  text="10 EUR", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                  anchor="e")
     canvas.tag_bind(desmit_eiro, "<Button-1>", gaidisanas_ekrans_click)
+    canvas.tag_bind(desmit_eiro_teksts, "<Button-1>", gaidisanas_ekrans_click)
 
     divdesmit_eiro = canvas.create_rectangle(0, vid_y+130, 500, vid_y+200,
                                                outline="#786689", fill = "#786689",
@@ -289,6 +306,7 @@ def iznemsanas_ekrans():
                                                  text="20 EUR", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                  anchor="e")
     canvas.tag_bind(divdesmit_eiro, "<Button-1>", gaidisanas_ekrans_click)
+    canvas.tag_bind(divdesmit_eiro_teksts, "<Button-1>", gaidisanas_ekrans_click)
 
     piecdesmit_eiro = canvas.create_rectangle(0, vid_y+265, 500, vid_y+335,
                                                outline="#786689", fill = "#786689",
@@ -297,6 +315,7 @@ def iznemsanas_ekrans():
                                                  text="50 EUR", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                  anchor="e")
     canvas.tag_bind(piecdesmit_eiro, "<Button-1>", gaidisanas_ekrans_click)
+    canvas.tag_bind(piecdesmit_eiro_teksts, "<Button-1>", gaidisanas_ekrans_click)
 
     simts_eiro = canvas.create_rectangle(780, vid_y-140, 1280, vid_y-70,
                                                outline="#786689", fill = "#786689",
@@ -305,6 +324,7 @@ def iznemsanas_ekrans():
                                                  text="100 EUR", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                  anchor="w")
     canvas.tag_bind(simts_eiro, "<Button-1>", gaidisanas_ekrans_click)
+    canvas.tag_bind(simts_eiro_teksts, "<Button-1>", gaidisanas_ekrans_click)
 
     cita_summa = canvas.create_rectangle(780, vid_y-5, 1280, vid_y+65,
                                                outline="#786689", fill = "#786689",
@@ -312,7 +332,8 @@ def iznemsanas_ekrans():
     cita_summa_teksts = canvas.create_text(800, vid_y+30, \
                                                  text="Cita summa", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                  anchor="w")
-    canvas.tag_bind(cita_summa, "<Button-1>", gaidisanas_ekrans_click)
+    canvas.tag_bind(cita_summa, "<Button-1>", cita_summa_click)
+    canvas.tag_bind(cita_summa_teksts, "<Button-1>", cita_summa_click)
 
     bilance2 = canvas.create_rectangle(780, vid_y+130, 1280, vid_y+200,
                                                outline="#786689", fill = "#786689",
@@ -320,7 +341,8 @@ def iznemsanas_ekrans():
     bilance2_teksts = canvas.create_text(800, vid_y+165, \
                                                  text="Bilance", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                  anchor="w")
-    canvas.tag_bind(bilance2, "<Button-1>", gaidisanas_ekrans_click)
+    canvas.tag_bind(bilance2, "<Button-1>", bilance_click)
+    canvas.tag_bind(bilance2_teksts, "<Button-1>", bilance_click)
 
     cita_operacija2 = canvas.create_rectangle(780, vid_y+265, 1280, vid_y+335,
                                                outline="#786689", fill = "#786689",
@@ -328,8 +350,19 @@ def iznemsanas_ekrans():
     cita_operacija2_teksts = canvas.create_text(800, vid_y+300, \
                                                  text="Cita operācija", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                  anchor="w")
-    canvas.tag_bind(cita_operacija2, "<Button-1>", gaidisanas_ekrans_click)
-    
+    canvas.tag_bind(cita_operacija2, "<Button-1>", cita_operacija_click)
+    canvas.tag_bind(cita_operacija2_teksts, "<Button-1>", cita_operacija_click)
+
+def iemaksas_ekrans():
+    global canvas 
+    canvas = Canvas(root, width=platums, height=garums, bg="#574964")
+    canvas.pack()
+
+    noradit_summu = canvas.create_text(vid_x, 140, \
+                                      text="Lūdzu, ievietojiet banknoti!", fill="#FFFFFF", font=('Catamaran', 50, "bold"))
+    noradit_summu_eng = canvas.create_text(vid_x, 210, \
+                                      text="Please insert cash!", fill="#FFFFFF", font=('Catamaran', 30, "bold"))
+
 def gaidisanas_ekrans():
     global canvas 
     canvas = Canvas(root, width=platums, height=garums, bg="#574964")
@@ -397,6 +430,75 @@ def darijums_pabeigts():
                                                          text="Nē", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                          anchor="w")
     canvas.tag_bind(izvele_ne3, "<Button-1>", sakuma_ekrans)
+
+def cita_summa_ekrans():
+    global canvas, pin_entry
+    canvas = Canvas(root, width=platums, height=garums, bg="#574964")
+    canvas.pack()
+
+    sum_var.set("")
+
+    pin_kods = canvas.create_text(vid_x, 140, \
+                                      text="Ievadiet summu", fill="#FFFFFF", font=('Catamaran', 50, "bold"))
+    pin_kods_eng = canvas.create_text(vid_x, 210, \
+                                      text="Input amount", fill="#FFFFFF", font=('Catamaran', 30, "bold"))
+    pin_kods_ekrans = canvas.create_rectangle(vid_x-250, 270, vid_x+250, 350,
+                                              outline = "#9F8383", fill = "#9F8383",
+                                              width = 10)
+    pin_kods_keyboard = canvas.create_rectangle(vid_x-250, 450, vid_x+250, 830,
+                                                outline="#9F8383", fill = "#9F8383",
+                                                width = 10)
+    pin_kods_pogas_bg2 = canvas.create_rectangle(vid_x-220, 480, vid_x+220, 800,
+                                                 outline="#C8AAAA", fill = "#C8AAAA",
+                                                 width = 10)
+    pin_entry = Entry(canvas, textvariable = sum_var, font=('catamaran',30,'bold'))
+    canvas.create_window(vid_y+160, 310, window=pin_entry)
+    # ENTER poga
+    pin_enter_poga = canvas.create_rectangle(vid_x-210, 490, vid_x+210, 550,
+                                                         outline="#EEEEEE", fill = "#EEEEEE",
+                                                         width = 10)
+    pin_enter_teksts = canvas.create_text(vid_x-190, 520, \
+                                                         text="Enter", fill="#000000", font=('Catamaran', 25, "bold"),
+                                                         anchor="w")
+    pin_enter_poga_ikona = canvas.create_line(vid_x-190, 540, vid_x-100, 540, fill="#2EC301", width=5)
+    pin_enter_poga_aplis = canvas.create_oval(vid_x+150, 500, vid_x+190, 540, outline="black", width=5)
+    canvas.tag_bind(pin_enter_poga, "<Button-1>", gaidisanas_ekrans_click)
+    canvas.tag_bind(pin_enter_teksts, "<Button-1>", gaidisanas_ekrans_click)
+    canvas.tag_bind(pin_enter_poga_ikona, "<Button-1>", gaidisanas_ekrans_click)
+    canvas.tag_bind(pin_enter_poga_aplis, "<Button-1>", gaidisanas_ekrans_click)
+
+    # CLEAR poga
+    pin_clear_poga = canvas.create_rectangle(vid_x-210, 570, vid_x+210, 630,
+                                                         outline="#EEEEEE", fill = "#EEEEEE",
+                                                         width = 10)
+    pin_clear_teksts = canvas.create_text(vid_x-190, 600, \
+                                                         text="Clear", fill="#000000", font=('Catamaran', 25, "bold"),
+                                                         anchor="w")
+    pin_clear_poga_ikona = canvas.create_line(vid_x-190, 620, vid_x-100, 620, fill="#E7DF00", width=5)
+    pin_clear_poga_trissturis = canvas.create_polygon(vid_x+150, 600, vid_x+180, 580, vid_x+150, 600, vid_x+180, 620, outline="black", width=5)
+    canvas.tag_bind(pin_clear_poga, "<Button-1>", dzest_summu)
+    canvas.tag_bind(pin_clear_teksts, "<Button-1>", dzest_summu)
+    canvas.tag_bind(pin_clear_poga_ikona, "<Button-1>", dzest_summu)
+    canvas.tag_bind(pin_clear_poga_trissturis, "<Button-1>", dzest_summu)
+    # CANCEL poga
+    pin_cancel_poga = canvas.create_rectangle(vid_x-210, 650, vid_x+210, 710,
+                                                         outline="#EEEEEE", fill = "#EEEEEE",
+                                                         width = 10)
+    pin_cancel_teksts = canvas.create_text(vid_x-190, 680, \
+                                                         text="Cancel", fill="#000000", font=('Catamaran', 25, "bold"),
+                                                         anchor="w")
+    pin_clear_poga_ikona = canvas.create_line(vid_x-190, 700, vid_x-100, 700, fill="#E70000", width=5)
+    pin_clear_poga_linija1 = canvas.create_line(vid_x+148, 660, vid_x+192, 700, fill="black", width=5)
+    pin_clear_poga_linija2 = canvas.create_line(vid_x+192, 660, vid_x+148, 700, fill="black", width=5)
+    canvas.tag_bind(pin_cancel_poga, "<Button-1>", naudas_iznemsana_click)
+    canvas.tag_bind(pin_cancel_teksts, "<Button-1>", naudas_iznemsana_click)
+    canvas.tag_bind(pin_clear_poga_ikona, "<Button-1>", naudas_iznemsana_click)
+    canvas.tag_bind(pin_clear_poga_linija1, "<Button-1>", naudas_iznemsana_click)
+    canvas.tag_bind(pin_clear_poga_linija2, "<Button-1>", naudas_iznemsana_click)
+    # tukšs lauks
+    tukss_lauks = canvas.create_rectangle(vid_x-210, 730, vid_x+210, 790,
+                                                         outline="#EEEEEE", fill = "#EEEEEE",
+                                                         width = 10)
 
 def bilances_ekrans():
     global canvas
