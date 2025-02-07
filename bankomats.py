@@ -73,20 +73,24 @@ def atjaunot_balanci(summa):
         print(f"Jaunā bilance: {jauna_bilance:.2f}")
         return True 
     else:
-        print("Insufficient funds!")
-        return False  # Withdrawal failed
+        nepietiek_balance() # !
+        return False
 
 def iznemt(summa):
     try:
-        if summa % 5 != 0 or summa <= 0:
+        if summa % 5 != 0:
             iznemt_error()
             return
         
+        if summa <= 0:
+            nepietiek_balance() #!
+            return
+        
         if atjaunot_balanci(summa):
-            print(f"Withdrawn {summa} EUR successfully!")
+            print(f"Izņemti {summa} EUR!")
             gaidisanas_ekrans_click()
         else:
-            print("Not enough balance!")
+            print("Nepietiekoša balance!")
     
     except ValueError:
         print("Kļūda: Lūdzu, ievadiet derīgu summu!")
@@ -102,7 +106,7 @@ def pievienot_naudu():
         summa = int(entered_value)
 
         if summa % 5 != 0 or summa <= 0:
-            iemaksa_error() # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            iemaksa_error()
             return
 
         with open("bilance.txt", "r") as f:
@@ -754,6 +758,38 @@ def iemaksa_error():
                                                          anchor="w")
     canvas.tag_bind(izvele_ne, "<Button-1>", darijuma_ekrans_click)
     canvas.tag_bind(izvele_ne_teksts, "<Button-1>", darijuma_ekrans_click)
+
+def nepietiek_balance():
+    global canvas
+    if canvas:
+        canvas.destroy()
+    canvas = Canvas(root, width=platums, height=garums, bg="#574964")
+    canvas.pack()
+
+    nepietiek_naudas = canvas.create_text(vid_x, 140, \
+                                      text=f"Nepietiek naudas. Mēģināt vēlreiz?:", fill="#FFFFFF", font=('Catamaran', 50, "bold"))
+    nepietiek_naudas_eng = canvas.create_text(vid_x, 210, \
+                                      text="Not enough funds. Try again?", fill="#FFFFFF", font=('Catamaran', 30, "bold"))
+    
+    nepietiek_balance_cita_operacija = canvas.create_rectangle(780, vid_y+65, 1280, vid_y+135,
+                                             outline="#786689", fill = "#786689",
+                                             width = 10)
+    darijums_cita_operacija_teksts = canvas.create_text(800, vid_y+100, \
+                                               text="Cita operācija", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
+                                               anchor="w")
+    canvas.tag_bind(nepietiek_balance_cita_operacija, "<Button-1>", cita_operacija_click)
+    canvas.tag_bind(darijums_cita_operacija_teksts, "<Button-1>", cita_operacija_click)
+
+    iziet_operacija = canvas.create_rectangle(780, vid_y+200, 1280, vid_y+270,
+                                             outline="#786689", fill = "#786689",
+                                             width = 10)
+    iziet_operacija_teksts = canvas.create_text(800, vid_y+235, \
+                                               text="Iziet", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
+                                               anchor="w")
+    canvas.tag_bind(iziet_operacija, "<Button-1>", lambda event: iznemiet_karti_ekrans())
+    canvas.tag_bind(iziet_operacija_teksts, "<Button-1>", lambda event: iznemiet_karti_ekrans())
+
+# Ja tukšs lauks, tad met error
 
 sakuma_ekrans() #sākt ar kāršu ievietošanas ekrānu
 
