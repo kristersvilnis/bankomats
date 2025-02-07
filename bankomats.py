@@ -499,14 +499,14 @@ def iemaksas_ekrans():
     iemaksas_cancel_teksts = canvas.create_text(vid_x-190, 680, \
                                                          text="Cancel", fill="#000000", font=('Catamaran', 25, "bold"),
                                                          anchor="w")
-    iemaksas_clear_poga_ikona = canvas.create_line(vid_x-190, 700, vid_x-100, 700, fill="#E70000", width=5)
-    iemaksas_clear_poga_linija1 = canvas.create_line(vid_x+148, 660, vid_x+192, 700, fill="black", width=5)
-    iemaksas_clear_poga_linija2 = canvas.create_line(vid_x+192, 660, vid_x+148, 700, fill="black", width=5)
-    canvas.tag_bind(iemaksas_cancel_poga, "<Button-1>", naudas_iznemsana_click)
-    canvas.tag_bind(iemaksas_cancel_teksts, "<Button-1>", naudas_iznemsana_click)
-    canvas.tag_bind(iemaksas_clear_poga_ikona, "<Button-1>", naudas_iznemsana_click)
-    canvas.tag_bind(iemaksas_clear_poga_linija1, "<Button-1>", naudas_iznemsana_click)
-    canvas.tag_bind(iemaksas_clear_poga_linija2, "<Button-1>", naudas_iznemsana_click)
+    iemaksas_cancel_poga_ikona = canvas.create_line(vid_x-190, 700, vid_x-100, 700, fill="#E70000", width=5)
+    iemaksas_cancel_poga_linija1 = canvas.create_line(vid_x+148, 660, vid_x+192, 700, fill="black", width=5)
+    iemaksas_cancel_poga_linija2 = canvas.create_line(vid_x+192, 660, vid_x+148, 700, fill="black", width=5)
+    canvas.tag_bind(iemaksas_cancel_poga, "<Button-1>", cita_operacija_click)
+    canvas.tag_bind(iemaksas_cancel_teksts, "<Button-1>", cita_operacija_click)
+    canvas.tag_bind(iemaksas_cancel_poga_ikona, "<Button-1>", cita_operacija_click)
+    canvas.tag_bind(iemaksas_cancel_poga_linija1, "<Button-1>", cita_operacija_click)
+    canvas.tag_bind(iemaksas_cancel_poga_linija2, "<Button-1>", cita_operacija_click)
     # tukšs lauks
     tukss_lauks = canvas.create_rectangle(vid_x-210, 730, vid_x+210, 790,
                                                          outline="#EEEEEE", fill = "#EEEEEE",
@@ -629,10 +629,10 @@ def cita_summa_ekrans():
                                                          anchor="w")
     sum_enter_poga_ikona = canvas.create_line(vid_x-190, 540, vid_x-100, 540, fill="#2EC301", width=5)
     sum_enter_poga_aplis = canvas.create_oval(vid_x+150, 500, vid_x+190, 540, outline="black", width=5)
-    canvas.tag_bind(summa_enter_poga, "<Button-1>", lambda event: iznemt(int(sum_var.get().strip())))
-    canvas.tag_bind(summa_enter_teksts, "<Button-1>", lambda event: iznemt(int(sum_var.get().strip())))
-    canvas.tag_bind(sum_enter_poga_ikona, "<Button-1>", lambda event: iznemt(int(sum_var.get().strip())))
-    canvas.tag_bind(sum_enter_poga_aplis, "<Button-1>", lambda event: iznemt(int(sum_var.get().strip())))
+    canvas.tag_bind(summa_enter_poga, "<Button-1>", lambda event: iznemt(int(sum_var.get().strip())) if sum_var.get().strip().isdigit() else messagebox.showerror("Kļūda", "Lūdzu, ievadiet derīgu summu!"))
+    canvas.tag_bind(summa_enter_teksts, "<Button-1>", lambda event: iznemt(int(sum_var.get().strip())) if sum_var.get().strip().isdigit() else messagebox.showerror("Kļūda", "Lūdzu, ievadiet derīgu summu!"))
+    canvas.tag_bind(sum_enter_poga_ikona, "<Button-1>", lambda event: iznemt(int(sum_var.get().strip())) if sum_var.get().strip().isdigit() else messagebox.showerror("Kļūda", "Lūdzu, ievadiet derīgu summu!"))
+    canvas.tag_bind(sum_enter_poga_aplis, "<Button-1>", lambda event: iznemt(int(sum_var.get().strip())) if sum_var.get().strip().isdigit() else messagebox.showerror("Kļūda", "Lūdzu, ievadiet derīgu summu!"))
 
     # CLEAR poga
     sum_clear_poga = canvas.create_rectangle(vid_x-210, 570, vid_x+210, 630,
@@ -766,31 +766,29 @@ def nepietiek_balance():
     canvas = Canvas(root, width=platums, height=garums, bg="#574964")
     canvas.pack()
 
-    nepietiek_naudas = canvas.create_text(vid_x, 140, \
-                                      text=f"Nepietiek naudas. Mēģināt vēlreiz?:", fill="#FFFFFF", font=('Catamaran', 50, "bold"))
-    nepietiek_naudas_eng = canvas.create_text(vid_x, 210, \
+    nepietiek_naudas = canvas.create_text(vid_x, 150, \
+                                      text=f"Nepietiek naudas. Mēģināt vēlreiz?", fill="#FFFFFF", font=('Catamaran', 50, "bold"))
+    nepietiek_naudas_eng = canvas.create_text(vid_x, 230, \
                                       text="Not enough funds. Try again?", fill="#FFFFFF", font=('Catamaran', 30, "bold"))
     
-    nepietiek_balance_cita_operacija = canvas.create_rectangle(780, vid_y+65, 1280, vid_y+135,
+    nepietiek_balance_cita_operacija = canvas.create_rectangle(780, vid_y-35, 1280, vid_y+35,
                                              outline="#786689", fill = "#786689",
                                              width = 10)
-    darijums_cita_operacija_teksts = canvas.create_text(800, vid_y+100, \
-                                               text="Cita operācija", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
+    darijums_cita_operacija_teksts = canvas.create_text(800, vid_y, \
+                                               text="Jā", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                anchor="w")
-    canvas.tag_bind(nepietiek_balance_cita_operacija, "<Button-1>", cita_operacija_click)
-    canvas.tag_bind(darijums_cita_operacija_teksts, "<Button-1>", cita_operacija_click)
+    canvas.tag_bind(nepietiek_balance_cita_operacija, "<Button-1>", cita_summa_click)
+    canvas.tag_bind(darijums_cita_operacija_teksts, "<Button-1>", cita_summa_click)
 
-    iziet_operacija = canvas.create_rectangle(780, vid_y+200, 1280, vid_y+270,
+    iziet_operacija = canvas.create_rectangle(780, vid_y+100, 1280, vid_y+170,
                                              outline="#786689", fill = "#786689",
                                              width = 10)
-    iziet_operacija_teksts = canvas.create_text(800, vid_y+235, \
-                                               text="Iziet", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
+    iziet_operacija_teksts = canvas.create_text(800, vid_y+135, \
+                                               text="Nē", fill="#FFFFFF", font=('Catamaran', 30, "bold"),
                                                anchor="w")
-    canvas.tag_bind(iziet_operacija, "<Button-1>", lambda event: iznemiet_karti_ekrans())
-    canvas.tag_bind(iziet_operacija_teksts, "<Button-1>", lambda event: iznemiet_karti_ekrans())
+    canvas.tag_bind(iziet_operacija, "<Button-1>", lambda event: naudas_iznemsana_click())
+    canvas.tag_bind(iziet_operacija_teksts, "<Button-1>", lambda event: naudas_iznemsana_click())
 
-# Ja tukšs lauks, tad met error
-
-sakuma_ekrans() #sākt ar kāršu ievietošanas ekrānu
+sakuma_ekrans() #sākt ar kartes ievietošanas ekrānu
 
 root.mainloop()
