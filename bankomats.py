@@ -33,6 +33,61 @@ def sakuma_ekrans(event=None):
     karte_sakums_eng = canvas.create_text(vid_x, 810, text="To proceed, please", fill='#FFFFFF', font=('Catamaran', 50, "bold"), anchor="center")
     karte_sakums2_eng = canvas.create_text(vid_x, 890, text="insert your card", fill='#FFFFFF', font=('Catamaran', 50, "bold"), anchor="center")
 
+    karte_sakums_zimejums = canvas.create_line(vid_x-175, 350, vid_x+175, 350, fill="#FFDAB3", width=5)
+    karte_sakums_zimejums2 = canvas.create_rectangle(vid_x-175, 350, vid_x-150, 400,
+                                              outline = "#FFDAB3", fill = "#FFDAB3",
+                                              width = 5)
+    karte_sakums_zimejums3 = canvas.create_rectangle(vid_x+150, 350, vid_x+175, 400,
+                                              outline = "#FFDAB3", fill = "#FFDAB3",
+                                              width = 5)
+    karte_sakums_kvadrats = canvas.create_rectangle(vid_x-150, 350, vid_x+150, 600,
+                                              outline = "#FFDAB3",
+                                              width = 5)
+    karte_sakums_kvadrats2 = canvas.create_rectangle(vid_x+50, 470, vid_x+150, 560,
+                                              outline = "#FFDAB3",
+                                              width = 5)
+
+    paradit_ikonu = [
+        (karte_sakums_zimejums, False),
+        (karte_sakums_zimejums2, True),
+        (karte_sakums_zimejums3, True),
+        (karte_sakums_kvadrats, False),
+        (karte_sakums_kvadrats2, False)
+    ]
+    iedegsanas_animacija(canvas, paradit_ikonu)
+
+def iedegsanas_animacija(canvas, items, index=0, direction=1):
+    steps = 20
+    t = index / (steps - 1)
+    color = blend_colors("#FFDAB3", "#574964", t)  # glow -> background
+
+    for item, fill_glow in items:
+        try:
+            canvas.itemconfig(item, outline=color)
+            if fill_glow:
+                canvas.itemconfig(item, fill=color)
+        except:
+            pass
+
+    next_index = index + direction
+    if next_index >= steps:
+        next_index = steps - 1
+        direction = -1
+    elif next_index < 0:
+        next_index = 0
+        direction = 1
+
+    canvas.after(50, iedegsanas_animacija, canvas, items, next_index, direction)
+
+
+def blend_colors(start_hex, end_hex, t):
+    # t: 0.0 (start) -> 1.0 (end)
+    start_rgb = [int(start_hex[i:i+2], 16) for i in (1, 3, 5)]
+    end_rgb = [int(end_hex[i:i+2], 16) for i in (1, 3, 5)]
+    blended = [round(start + (end - start) * t) for start, end in zip(start_rgb, end_rgb)]
+    return '#{:02x}{:02x}{:02x}'.format(*blended)
+
+
 def meklet_pin():
     try:
         with open("pareizais_kods.txt", "r") as file:
