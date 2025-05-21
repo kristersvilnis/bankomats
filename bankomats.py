@@ -56,36 +56,35 @@ def sakuma_ekrans(event=None):
     ]
     iedegsanas_animacija(canvas, paradit_ikonu)
 
-def iedegsanas_animacija(canvas, items, index=0, direction=1):
-    steps = 20
-    t = index / (steps - 1)
-    color = blend_colors("#FFDAB3", "#574964", t)  # glow -> background
+def iedegsanas_animacija(canvas, items, index=0, virziens=1):
+    soli = 20
+    t = index / (soli - 1)
+    krasa = sajaukt_krasas("#FFDAB3", "#574964", t)
 
-    for item, fill_glow in items:
+    for item, piepildijums in items:
         try:
-            canvas.itemconfig(item, outline=color)
-            if fill_glow:
-                canvas.itemconfig(item, fill=color)
+            canvas.itemconfig(item, outline=krasa)
+            if piepildijums:
+                canvas.itemconfig(item, fill=krasa)
         except:
             pass
 
-    next_index = index + direction
-    if next_index >= steps:
-        next_index = steps - 1
-        direction = -1
-    elif next_index < 0:
-        next_index = 0
-        direction = 1
+    nakamais_index = index + virziens
+    if nakamais_index >= soli:
+        nakamais_index = soli - 1
+        virziens = -1
+    elif nakamais_index < 0:
+        nakamais_index = 0
+        virziens = 1
 
-    canvas.after(50, iedegsanas_animacija, canvas, items, next_index, direction)
+    canvas.after(50, iedegsanas_animacija, canvas, items, nakamais_index, virziens)
 
 
-def blend_colors(start_hex, end_hex, t):
-    # t: 0.0 (start) -> 1.0 (end)
-    start_rgb = [int(start_hex[i:i+2], 16) for i in (1, 3, 5)]
-    end_rgb = [int(end_hex[i:i+2], 16) for i in (1, 3, 5)]
-    blended = [round(start + (end - start) * t) for start, end in zip(start_rgb, end_rgb)]
-    return '#{:02x}{:02x}{:02x}'.format(*blended)
+def sajaukt_krasas(sakuma_hex, beigas_hex, t):
+    sakuma_rgb = [int(sakuma_hex[i:i+2], 16) for i in (1, 3, 5)]
+    beigas_rgb = [int(beigas_hex[i:i+2], 16) for i in (1, 3, 5)]
+    sajauktas = [round(start + (end - start) * t) for start, end in zip(sakuma_rgb, beigas_rgb)]
+    return '#{:02x}{:02x}{:02x}'.format(*sajauktas)
 
 
 def meklet_pin():
