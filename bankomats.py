@@ -33,6 +33,60 @@ def sakuma_ekrans(event=None):
     karte_sakums_eng = canvas.create_text(vid_x, 810, text="To proceed, please", fill='#FFFFFF', font=('Catamaran', 50, "bold"), anchor="center")
     karte_sakums2_eng = canvas.create_text(vid_x, 890, text="insert your card", fill='#FFFFFF', font=('Catamaran', 50, "bold"), anchor="center")
 
+    karte_sakums_zimejums = canvas.create_line(vid_x-175, 350, vid_x+175, 350, fill="#FFDAB3", width=5)
+    karte_sakums_zimejums2 = canvas.create_rectangle(vid_x-175, 350, vid_x-150, 400,
+                                              outline = "#FFDAB3", fill = "#FFDAB3",
+                                              width = 5)
+    karte_sakums_zimejums3 = canvas.create_rectangle(vid_x+150, 350, vid_x+175, 400,
+                                              outline = "#FFDAB3", fill = "#FFDAB3",
+                                              width = 5)
+    karte_sakums_kvadrats = canvas.create_rectangle(vid_x-150, 350, vid_x+150, 600,
+                                              outline = "#FFDAB3",
+                                              width = 5)
+    karte_sakums_kvadrats2 = canvas.create_rectangle(vid_x+50, 470, vid_x+150, 560,
+                                              outline = "#FFDAB3",
+                                              width = 5)
+
+    paradit_ikonu = [
+        (karte_sakums_zimejums, False),
+        (karte_sakums_zimejums2, True),
+        (karte_sakums_zimejums3, True),
+        (karte_sakums_kvadrats, False),
+        (karte_sakums_kvadrats2, False)
+    ]
+    iedegsanas_animacija(canvas, paradit_ikonu)
+
+def iedegsanas_animacija(canvas, items, index=0, virziens=1):
+    soli = 20
+    t = index / (soli - 1)
+    krasa = sajaukt_krasas("#FFDAB3", "#574964", t)
+
+    for item, piepildijums in items:
+        try:
+            canvas.itemconfig(item, outline=krasa)
+            if piepildijums:
+                canvas.itemconfig(item, fill=krasa)
+        except:
+            pass
+
+    nakamais_index = index + virziens
+    if nakamais_index >= soli:
+        nakamais_index = soli - 1
+        virziens = -1
+    elif nakamais_index < 0:
+        nakamais_index = 0
+        virziens = 1
+
+    canvas.after(50, iedegsanas_animacija, canvas, items, nakamais_index, virziens)
+
+
+def sajaukt_krasas(sakuma_hex, beigas_hex, t):
+    sakuma_rgb = [int(sakuma_hex[i:i+2], 16) for i in (1, 3, 5)]
+    beigas_rgb = [int(beigas_hex[i:i+2], 16) for i in (1, 3, 5)]
+    sajauktas = [round(start + (end - start) * t) for start, end in zip(sakuma_rgb, beigas_rgb)]
+    return '#{:02x}{:02x}{:02x}'.format(*sajauktas)
+
+
 def meklet_pin():
     try:
         with open("pareizais_kods.txt", "r") as file:
